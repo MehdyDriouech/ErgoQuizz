@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#06b6d4" />
+  <meta name="color-scheme" content="light only" />
+  <title>Ergo Quiz</title>
+
+  <!-- Police Inter -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="assets/styles.css" />
+
+  <!-- Favicon (optionnel) -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 24 24'%3E%3Cpath fill='%2306b6d4' d='M10.5 2a1 1 0 0 1 1-1h.99a1 1 0 0 1 1 1v2.02h2.01a1 1 0 0 1 1 1v.99a1 1 0 0 1-1 1H13.49v2.02a1 1 0 0 1-1 1h-.99a1 1 0 0 1-1-1V7.01H7.49a1 1 0 0 1 1-1h3.01zM6 11c-2.21 0-4 1.79-4 4v3c0 1.66 1.34 3 3 3h14a3 3 0 0 0 3-3v-3c0-2.21-1.79-4-4-4z'/%3E%3C/svg%3E" />
+</head>
+<body>
+  <noscript>Veuillez activer JavaScript pour utiliser l’application.</noscript>
+
+  <header class="app-header" role="banner">
+    <h1 id="app-title" aria-label="Ergo Quiz — entraînement en ergonomie et santé">Ergo Quiz</h1>
+    <nav aria-label="Navigation principale">
+      <button id="btn-home" class="btn ghost" aria-controls="view-themes">Thèmes</button>
+      <button id="btn-history" class="btn ghost" aria-controls="view-history">Historique</button>
+    </nav>
+  </header>
+
+  <main id="app" role="main">
+    <!-- VUE : Liste des thèmes -->
+    <section id="view-themes" class="view active" aria-labelledby="themes-title">
+      <!-- ENCART PRINCIPAL (fusion des 2 anciens + titre/sous-titre déplacés ici) -->
+      <div class="card" style="margin-bottom:16px;">
+        <!-- Titre & sous-titre -->
+        <h2 id="themes-title" style="margin-top:0;">Ergo Quiz, ton compagnon pour réussir tes etudes d'ergotherapie</h2>
+
+
+        <!-- Bloc hero + conseils, dans un seul encart -->
+        <div style="display:flex; gap:16px; align-items:center; flex-wrap:wrap; margin-top:12px;">
+          <figure aria-hidden="true" style="margin:0;">
+            <!-- SVG médical -->
+            <svg width="120" height="120" viewBox="0 0 120 120" role="img" aria-labelledby="heroTitle heroDesc" xmlns="http://www.w3.org/2000/svg">
+              <title id="heroTitle">Illustration médicale</title>
+              <desc id="heroDesc">Stéthoscope formant un cœur, symbole d’apprentissage en santé.</desc>
+              <defs>
+                <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+                  <stop offset="0%" stop-color="#06b6d4"/>
+                  <stop offset="100%" stop-color="#10b981"/>
+                </linearGradient>
+              </defs>
+              <circle cx="60" cy="60" r="56" fill="#ECFEFF" stroke="#BAE6FD" />
+              <path d="M40 50c0-8 6-14 14-14s14 6 14 14-6 14-14 14-14-6-14-14z" fill="url(#g)"/>
+              <path d="M74 40c10 0 18 8 18 18 0 7-4 13-10 16" fill="none" stroke="#0891b2" stroke-width="4" stroke-linecap="round"/>
+              <path d="M30 82c6 6 14 10 22 10 8 0 16-4 22-10" fill="none" stroke="#10b981" stroke-width="4" stroke-linecap="round"/>
+              <path d="M84 72v10a8 8 0 0 0 8 8h6" fill="none" stroke="#06b6d4" stroke-width="4" stroke-linecap="round"/>
+            </svg>
+          </figure>
+
+          <div style="flex:1; min-width:240px;">
+            <h3 style="margin:0 0 .5rem 0;"></h3>
+            <p class="muted" style="margin:0 0 .75rem 0;">
+              Quiz clairs, retours immédiats, progression suivie. Idéal pour les révisions en ergonotherapie.
+            </p>
+          </div>
+        </div>
+
+        <!-- Conseils intégrés dans le même encart -->
+        <div style="margin-top:16px;">
+          <h3 style="margin:0 0 .5rem 0;">Conseils pour maximiser ta mémorisation</h3>
+          <ul style="margin:.25rem 0 0 1rem;">
+            <li>💡 <strong>Répétition espacée :</strong> refais un thème 24h puis 72h plus tard.</li>
+            <li>🎯 <strong>Objectifs courts :</strong> 10–15 minutes par session, 2–3 thèmes ciblés.</li>
+            <li>🧩 <strong>Alternance :</strong> mélange QCM et cas cliniques quand c’est possible.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Liste dynamique rendue par ton JS (premier thème arrive ici) -->
+      <div id="themes-list" class="card-list" role="list"></div>
+    </section>
+
+    <!-- VUE : Quiz -->
+    <section id="view-quiz" class="view" aria-labelledby="quiz-title" hidden>
+      <div class="quiz-header">
+        <h2 id="quiz-title">Quiz</h2>
+        <div class="quiz-meta">
+          <span id="quiz-theme-title" class="badge" aria-live="polite"></span>
+          <span id="quiz-progress" class="muted" aria-live="polite"></span>
+        </div>
+      </div>
+
+      <div id="question-container" class="card" aria-live="polite"></div>
+
+      <div class="quiz-actions" role="group" aria-label="Actions du quiz">
+        <button id="btn-submit" class="btn primary">Valider</button>
+        <button id="btn-next" class="btn" disabled>Suivant</button>
+        <button id="btn-quit" class="btn ghost">Quitter</button>
+      </div>
+    </section>
+
+    <!-- VUE : Résultats -->
+    <section id="view-results" class="view" aria-labelledby="results-title" hidden>
+      <h2 id="results-title">Résultats</h2>
+      <p id="results-summary"></p>
+      <div id="results-details" class="card-list" aria-live="polite"></div>
+      <div class="actions" role="group" aria-label="Actions sur les résultats">
+        <button id="btn-retry" class="btn">Rejouer le thème</button>
+        <button id="btn-back-themes" class="btn ghost">Retour aux thèmes</button>
+      </div>
+    </section>
+
+    <!-- VUE : Historique -->
+    <section id="view-history" class="view" aria-labelledby="history-title" hidden>
+      <h2 id="history-title">Historique</h2>
+      <div id="history-list" class="card-list"></div>
+    </section>
+  </main>
+
+  <footer class="app-footer" role="contentinfo">
+    <small>Offline • Données stockées sur cet appareil</small>
+  </footer>
+
+  <!-- Script principal -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
